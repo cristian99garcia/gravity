@@ -84,8 +84,8 @@ var DrawingArea = (function() {
 
     function mousemove(event) {
         var b = bodies[0];
-        b.x = event.x - canvas.width / 2 + 80;
-        b.y = -event.y + canvas.height / 2 + 8;
+        b.x = event.x - canvas.width / 2;
+        b.y = -event.y + canvas.height / 2;
         updateForces();
     }
 
