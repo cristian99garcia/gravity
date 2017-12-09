@@ -7,6 +7,7 @@ function Body(mass, x, y) {
         valx: 0,
         vely: 0,
         forces: [],
+        netForce: null,
         color: "white",
 
         draw: function(ctx, addx, addy) {
@@ -32,11 +33,13 @@ function Body(mass, x, y) {
             var G = 100;  // Real value: 6.667e-11 Nm**2/kg**2
             var r = Math.pow(Utils.distance(p1, p2), 2);
             var f = (G * this.mass * body.mass) / r;
-            //console.log(f);
 
-            var v = Vector(f, dir, getSense(dir, p1, p2), p1);
-            v.point.x += this.x;
-            v.point.y += this.y;
+            var s = getSense(dir, p1, p2);
+            //console.log(f, dir.m, p1);
+
+            var v = Vector(f, dir.m, s, p1);
+            //console.log(v);
+            //console.log(v.lastPoint);
             return v;
         },
 
@@ -49,6 +52,25 @@ function Body(mass, x, y) {
 
         addForce: function(vector) {
             this.forces.push(vector);
+        },
+
+        updateNetForce: function() {
+            if (this.forces.length === 0) {
+                return;
+            }
+
+            var netForce = this.forces[0];
+            var add = false;
+            this.forces.forEach(function(vector) {
+                if (add && vector !== undefined) {
+                    netForce = netForce.add(vector);
+                    //console.log(netForce);
+                }
+                add = true;
+            });
+
+            this.netForce = netForce;
+            this.netForce.point = {x: this.x, y: this.y};
         },
     };
 
